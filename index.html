@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Mail Envelope</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HERO SECTION -->
+<section class="hero" id="hero-section">
+  <div class="hero-container">
+
+    <h1 class="hero-title" id="title">Love Mail</h1>
+    <p class="hero-subtext" id="subtext">Click the envelope to open</p>
+
+    <div class="envelope-wrapper">
+
+      <!-- Curved text -->
+      <svg viewBox="0 0 300 50" class="curved-text" id="curved-text">
+        <defs>
+          <path id="curvePath" d="M10,40 Q150,-10 290,40" />
+        </defs>
+        <text>
+          <textPath href="#curvePath" startOffset="50%" text-anchor="middle">
+            Hi Pretty
+          </textPath>
+        </text>
+      </svg>
+
+      <!-- Envelope -->
+      <img src="rclose.png" class="center-image" id="envelope">
+
+      <!-- Flowers -->
+      <img src="rflowers.png" class="flowers" id="flowers">
+
+      <!-- Click text -->
+      <div class="envelope-click-text" id="envelope-click-text">Click</div>
+      <div class="click-again" id="click-again">Click the envelope again</div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POPUP BOX AFTER FLOWERS -->
+<div class="popup-box" id="popup-box">
+  <h2>My Dearest Tsuu</h2>
+  <p>
+    "Hey! I’ve been thinking about you and couldn’t help but smile. You have this way of making my day better just by being you. I really enjoy our conversations and the little moments we share. I hope we get to spend more time together soon—it’d make me really happy."
+  </p>
+  <button id="continue-btn">Continue</button>
+</div>
+
+<!-- ROUND FLOWERS + VALENTINE BOX -->
+<div id="roundflowers-section">
+  <img src="roundflowersNobg.png" id="round-flowers">
+  <div class="valentine-box" id="valentine-box">
+    <h2>Will you be my <span id="fade-text">Valentine?</span></h2>
+    <div class="valentine-buttons">
+      <button id="yes-btn">Yes</button>
+      <button id="no-btn">No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const envelope = document.getElementById('envelope');
+  const flowers = document.getElementById('flowers');
+  const title = document.getElementById('title');
+  const subtext = document.getElementById('subtext');
+  const curvedText = document.getElementById('curved-text');
+  const clickAgain = document.getElementById('click-again');
+  const clickText = document.getElementById('envelope-click-text');
+
+  const popupBox = document.getElementById('popup-box');
+  const continueBtn = document.getElementById('continue-btn');
+
+  const roundFlowersSection = document.getElementById('roundflowers-section');
+  const valentineBox = document.getElementById('valentine-box');
+  let fadeText;
+
+  let opened = false;
+
+  // Envelope click
+  envelope.addEventListener('click', () => {
+    if (!opened) {
+      title.style.opacity = '0';
+      subtext.style.opacity = '0';
+      envelope.src = 'ropen.png';
+      clickText.classList.add('hide');
+
+      setTimeout(() => {
+        flowers.classList.add('show');
+        curvedText.style.opacity = '1';
+        clickAgain.classList.add('show');
+      }, 400);
+
+      opened = true;
+    } else {
+      envelope.src = 'rclose.png';
+      flowers.classList.remove('show');
+      curvedText.style.opacity = '0';
+      clickAgain.classList.remove('show');
+      clickText.classList.remove('hide');
+      title.style.opacity = '1';
+      subtext.style.opacity = '1';
+      opened = false;
+    }
+  });
+
+  // Flowers click shows first popup
+  flowers.addEventListener('click', () => {
+    popupBox.classList.add('show');
+  });
+
+  // Continue button
+  continueBtn.addEventListener('click', () => {
+    envelope.style.display = 'none';
+    flowers.style.display = 'none';
+    curvedText.style.display = 'none';
+    clickAgain.style.display = 'none';
+    clickText.style.display = 'none';
+
+    popupBox.classList.remove('show');
+    roundFlowersSection.style.display = 'block';
+
+    valentineBox.innerHTML = `
+      <h2>Will you be my <span id="fade-text">Valentine?</span></h2>
+      <div class="valentine-buttons">
+        <button id="yes-btn">Yes</button>
+        <button id="no-btn">No</button>
+      </div>
+    `;
+    valentineBox.classList.add('show');
+
+    fadeText = document.getElementById('fade-text');
+    fadeText.style.opacity = 0;
+    setTimeout(() => {
+      fadeText.style.transition = "opacity 2s ease-in";
+      fadeText.style.opacity = 1;
+    }, 200);
+
+    attachYesNoEvents();
+  });
+
+  // Function to attach Yes/No button events
+  function attachYesNoEvents() {
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+
+    yesBtn.addEventListener('click', () => {
+      // Replace Valentine box content with heart GIF
+      valentineBox.innerHTML = `
+       <img src="heart.gif" alt="Heart" style="width:200px; margin-bottom:20px;">
+    <div>YEEYYYYY</div>
+      `;
+    });
+
+    noBtn.addEventListener('click', () => {
+      // Replace Valentine box content with please GIF + retry
+      valentineBox.innerHTML = `
+        <img src="please.gif" alt="Oops" style="width:200px; margin-bottom:20px;">
+        <button id="retry-btn" style="
+          padding:10px 20px; font-size:1rem; border:none; border-radius:8px; 
+          background:#ff1a1a; color:#fff; cursor:pointer;">Another Chance</button>
+      `;
+      const retryBtn = document.getElementById('retry-btn');
+      retryBtn.addEventListener('click', () => {
+        // Restore original Valentine box
+        valentineBox.innerHTML = `
+          <h2>Will you be my <span id="fade-text">Valentine?</span></h2>
+          <div class="valentine-buttons">
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+          </div>
+        `;
+        fadeText = document.getElementById('fade-text');
+        fadeText.style.opacity = 0;
+        setTimeout(() => {
+          fadeText.style.transition = "opacity 2s ease-in";
+          fadeText.style.opacity = 1;
+        }, 100);
+
+        attachYesNoEvents();
+      });
+    });
+  }
+
+</script>
+</body>
+</html>
